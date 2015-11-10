@@ -1,3 +1,5 @@
+var moleHoles = $('.moleHole');
+
 /**
  * @constructor
  * A mole object represents a mole in the game.
@@ -12,23 +14,23 @@
  *
  */
 function Mole(minUpTime, maxUpTime){
-
     // Give this.timeSpentUp a number value between minUpTime and maxUpTime.
     // HINT: use Mole.prototype.getRandomBetween
     /* YOUR CODE HERE */
-
+    this.timeSpentUp = getRandomBetween(minUpTime, maxUpTime);
     // this.removed needs a value
     /* YOUR CODE HERE */
-
+    this.removed = false;
     // this.occupiedHole needs a value. it should be a DOM element
     // HINT: use Mole.prototype.selectHole
     /* YOUR CODE HERE */
-
+    this.occupiedHole = selectHole();
     // Create an HTML element to represent the Mole
     // and save it into this.moleElement
     // Don't forget to give our mole a proper css class!
     // Don't forget to call whackThisMole if the mole is clicked!
     /* YOUR CODE HERE */
+    this.moleElement = <img src="mole.png" alt='mole' class='mole'>
 
     // Moles always emerge when they are created.
     this.emerge();
@@ -44,6 +46,7 @@ function Mole(minUpTime, maxUpTime){
  */
 Mole.prototype.emerge = function() {
  /* YOUR CODE HERE */
+    moleHole
 }
 
 /**
@@ -81,6 +84,13 @@ Mole.prototype.removeMole = function() {
  */
 Mole.prototype.selectHole = function() {
     /* YOUR CODE HERE */
+    var moleHoles = $('.moleHole');
+    for (i = 0; i < moleHoles.length; i++) {
+        if (moleHoles[i].getAttribute('data-hole-occupied') === false) {
+            return moleHoles[i];
+        }
+    }
+    return undefined;
 };
 
 /**
@@ -88,6 +98,10 @@ Mole.prototype.selectHole = function() {
  */
 Mole.prototype.getRandomBetween = function(min, max) {
     /* YOUR CODE HERE */
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    return getRandomArbitrary((min + 0.1), max);
 };
 
 /**
@@ -95,4 +109,8 @@ Mole.prototype.getRandomBetween = function(min, max) {
  */
 Mole.prototype.getRandomIntBetween = function(min, max) {
     /* YOUR CODE HERE */
+    function getRandomIntInclusive(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    return getRandomIntInclusive(min,max);
 };
