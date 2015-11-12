@@ -44,12 +44,12 @@ html {
    Bonus points for making the mouse turn into heart.png when the 
    mouse hovers over a mole! */
 .mole {
-
+  z-index: 1;
 }
 
 /* When a mole has been clicked, it's in love.
    make sure when a mole has been clicked it gets the 
    foundLove.png as it's background */
 .in-love {
-
+  background-image: url('../images/found-love.png');
 }

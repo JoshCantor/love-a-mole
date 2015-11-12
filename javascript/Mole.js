@@ -1,5 +1,3 @@
-var moleHoles = $('.moleHole');
-
 /**
  * @constructor
  * A mole object represents a mole in the game.
@@ -17,23 +15,26 @@ function Mole(minUpTime, maxUpTime){
     // Give this.timeSpentUp a number value between minUpTime and maxUpTime.
     // HINT: use Mole.prototype.getRandomBetween
     /* YOUR CODE HERE */
-    this.timeSpentUp = getRandomBetween(minUpTime, maxUpTime);
+    this.timeSpentUp = this.getRandomBetween(minUpTime, maxUpTime);
     // this.removed needs a value
     /* YOUR CODE HERE */
     this.removed = false;
     // this.occupiedHole needs a value. it should be a DOM element
     // HINT: use Mole.prototype.selectHole
-    /* YOUR CODE HERE */
-    this.occupiedHole = selectHole();
+     // YOUR CODE HERE 
+    var hole = this.selectHole();
+    this.occupiedHole = hole;
     // Create an HTML element to represent the Mole
     // and save it into this.moleElement
     // Don't forget to give our mole a proper css class!
     // Don't forget to call whackThisMole if the mole is clicked!
     /* YOUR CODE HERE */
-    this.moleElement = <img src="mole.png" alt='mole' class='mole'>
-
+    this.moleElement = $('<img src="images/mole.png" alt=\'mole\' class=\'mole\'>');
+    // this.moleElement.on('click', whackThisMole());
     // Moles always emerge when they are created.
     this.emerge();
+    this.isWhacked = 'false';
+    this.whackThisMole();
 }
 
 /**
@@ -46,7 +47,16 @@ function Mole(minUpTime, maxUpTime){
  */
 Mole.prototype.emerge = function() {
  /* YOUR CODE HERE */
-    moleHole
+    var currentHole = this.selectHole();
+    if (currentHole !== undefined) {
+        this.currentHole = currentHole;
+        console.log(currentHole);
+        $(currentHole).attr('data-hole-occupied', 'true');
+        $(currentHole).append(this.moleElement);
+        $(currentHole).append(this.heartElement);
+        moleImg = this.moleElement;
+        moleImg.delay(Math.floor(this.timeSpentUp)).fadeOut();
+    }
 }
 
 /**
@@ -62,7 +72,19 @@ Mole.prototype.emerge = function() {
  * Then after one second it should remove the mole from the DOM.
  */
 Mole.prototype.whackThisMole = function() {
-    /* YOUR CODE HERE */
+    var mole = this.moleElement;
+    var _this = this;
+    mole.on('click', function() {
+        if (_this.isWhacked === 'false') {
+            scoreBoard.attr('data-score', Number(scoreBoard.attr('data-score')) + 1);
+            scoreBoard.html(Number(scoreBoard.html()) + 1);
+        }
+        _this.isWhacked = 'true';
+        console.log(_this.isWhacked)
+        
+        mole.addClass('in-love');
+        _this.removeMole();
+    })
 }
 
 /**
@@ -71,7 +93,14 @@ Mole.prototype.whackThisMole = function() {
  * false so that other moles can occupy the hole. 
  */
 Mole.prototype.removeMole = function() {
-
+    var mole = this.moleElement;
+    var _this = this;
+    mole.on('click', function() {
+        mole.removeClass('in-love');
+        mole.fadeOut();
+        var currentHole = $(_this.currentHole)
+        currentHole.attr('data-hole-occupied', 'false');
+    })
 }
 /**
  * Select an element from the DOM. The element must be one of the 
@@ -85,10 +114,9 @@ Mole.prototype.removeMole = function() {
 Mole.prototype.selectHole = function() {
     /* YOUR CODE HERE */
     var moleHoles = $('.moleHole');
-    for (i = 0; i < moleHoles.length; i++) {
-        if (moleHoles[i].getAttribute('data-hole-occupied') === false) {
-            return moleHoles[i];
-        }
+    var i = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
+    if (moleHoles[i].getAttribute('data-hole-occupied') === 'false') {
+        return moleHoles[i];
     }
     return undefined;
 };
@@ -98,10 +126,7 @@ Mole.prototype.selectHole = function() {
  */
 Mole.prototype.getRandomBetween = function(min, max) {
     /* YOUR CODE HERE */
-    function getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-    return getRandomArbitrary((min + 0.1), max);
+    return Math.random() * (max - min) + min + 1;
 };
 
 /**
@@ -109,8 +134,7 @@ Mole.prototype.getRandomBetween = function(min, max) {
  */
 Mole.prototype.getRandomIntBetween = function(min, max) {
     /* YOUR CODE HERE */
-    function getRandomIntInclusive(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    return getRandomIntInclusive(min,max);
+    console.log('randIntBtwn');
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+
 };

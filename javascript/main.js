@@ -7,7 +7,6 @@ var GLOBALS = {};
 var scoreBoard;
 var gameStartButton;
 var gameCurrentlyActive;
-
 //
 // Main entry point:
 // Read the input paramaters,
@@ -15,15 +14,10 @@ var gameCurrentlyActive;
 // Start the game
 //
 window.onload = function(){
-    readQueryParams();
     // Read and save the query parameters from your form 
     // HINT: Fill out and use the function readQueryParams 
     /* YOUR CODE HERE */
-    var moleUpMin = GLOBALS['MOLE_UP_MIN'];
-    var moleUpMax = GLOBALS['MOLE_UP_MAX'];
-    var numberRounds = GLOBALS['NUMBER_OF_ROUNDS'];
-    var molesPerRound = GLOBALS['MOLES_PER_ROUND'];
-    var roundCooldown = GLOBALS['ROUND_COOLDOWN'];
+    readQueryParams();
   
     // Create the mole field 
     // HINT: Fill out and use the function createMoleField 
@@ -46,7 +40,6 @@ window.onload = function(){
     /* YOUR CODE HERE */
     gameStartButton.click(function() {
         startGame();
-        console.log('startGame');
     })
 };
 
@@ -61,28 +54,36 @@ window.onload = function(){
 //   ROUND_COOLDOWN (in seconds)
 function readQueryParams() {
     /* YOUR CODE HERE */
-    function showValues() {
-        var queryParams = $("form").serialize();
+    function readParams() {
+        var queryParams = document.location.search.replace('?', '');
         paramArr = queryParams.split('&');
-        return paramArr;
+        var splitParams = [];
+        for (i = 0; i < paramArr.length; i++) {
+            var parts = paramArr[i].split('=');
+            splitParams.push(parts);
+        }
+        var paramValues = [];
+        for (i = 0; i < splitParams.length; i++) {
+            var value = splitParams[i][1];
+            paramValues.push(value);
+        }
+        return paramValues;
     }
-    console.log(showValues());
-
-    GLOBALS["MOLE_UP_MIN"] = showValues()[0];
-    GLOBALS["MOLE_UP_MAX"] = showValues()[1];
-    GLOBALS["NUMBER_OF_ROUNDS"] = showValues()[2];
-    GLOBALS["MOLES_PER_ROUND"] = showValues()[3];
-    GLOBALS["ROUND_COOLDOWN"] = showValues()[4];
+    GLOBALS.MOLE_UP_MIN = readParams()[0];
+    GLOBALS.MOLE_UP_MAX = readParams()[1];
+    GLOBALS.NUMBER_OF_ROUNDS = readParams()[2];
+    GLOBALS.MOLES_PER_ROUND = readParams()[3];
+    GLOBALS.ROUND_COOLDOWN = readParams()[4];
 }
 
 // Create and insert a 3x3 HTML table.
 // Use createSingleMoleHole() to create the <td> elements
 function createMoleField(x, y) {
     /* YOUR CODE HERE */
-    for (var row = 0; row < y; row++) {
+    for (var row = 0; row < x; row++) {
         $('table').append('<tr>');
     }
-    for (var cell = 0; cell < x; cell++) {
+    for (var cell = 0; cell < y; cell++) {
         createSingleMoleHole();
     }
 }
@@ -92,7 +93,7 @@ function createMoleField(x, y) {
 // <td><div data-hole-occupied="false" class="mole-hole"></div></td>
 function createSingleMoleHole() {
     /* YOUR CODE HERE */
-    $('tr').append("<td class='moleHole' data-hole-occupied='false'>");
+    return $('tr').append("<td><div data-hole-occupied='false' class='moleHole'></div></td>");
 }
 
 ///
@@ -113,43 +114,43 @@ function startGame() {
     }
 
     // Set the scoreboard back to zero
-    scoreBoard.attr('data-score', 0);
-    scoreBoard.innerHTML = 0;
-    console.log(scoreBoard);
+    scoreBoard.attr('data-score', '0');
+    scoreBoard.html(0);
 
     // Hide the 
     gameStartButton.hide();
     initiateRound(0);
 }
+// Everything working as expected up to this point
+
+/////////////////////////
+
 
 /**
 * Use a closure and the event loop to act every ROUND_COOLDOWN seconds
 WHAT DOES THIS MEAN?
 */
 function initiateRound(roundNumber) {
-
     // Closing over roundNumber in this context is confusing - but important.
 
     // Without access to the environment variable roundNumber the rounds would not advance properly.
     // It's recursive, but also in an anonymous function, sent on "timeout", 
     // only to return after ROUND_COOLDOWN seconds. 
     var closureFunction = function() {
-        var moles = [];
+
         if(roundNumber < GLOBALS.NUMBER_OF_ROUNDS) {
+            
             // Create the moles 
             for(var i = 0; i < GLOBALS.MOLES_PER_ROUND; i++) {
-                //WHERE ARE THE MOLES STORED IN MEMORY???
-                moles.push(new Mole(GLOBALS.MOLE_UP_MIN*1000, GLOBALS.MOLE_UP_MAX*1000));
+                new Mole(GLOBALS.MOLE_UP_MIN*1000, GLOBALS.MOLE_UP_MAX*1000);
             }
 
             // Next round, using our precious closed-over parameter 
             initiateRound(roundNumber + 1);
-            
         }
         else {
             endGame();
         }
-        return moles;
     };
 
     // Set it and forget it.
