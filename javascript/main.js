@@ -158,7 +158,7 @@ function initiateRound(roundNumber) {
  * When we're sure the last moles are done, let the user try again
  */
 function endGame() {
-    var maxTimeUp = GLOBALS.MOLE_UP_MAX;
+    var maxTimeUp = (GLOBALS.ROUND_COOLDOWN * GLOBALS.NUMBER_OF_ROUNDS * GLOBALS.MOLE_UP_MAX);
 
     // Wait a little while after final round, then put the 
     // gameStartButton back on the screen.
