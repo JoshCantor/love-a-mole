@@ -55,7 +55,8 @@ Mole.prototype.emerge = function() {
         $(currentHole).append(this.moleElement);
         $(currentHole).append(this.heartElement);
         moleImg = this.moleElement;
-        moleImg.delay(Math.floor(this.timeSpentUp)).fadeOut();
+        setTimeout(this.removeMole.bind(this), Math.floor(this.timeSpentUp));
+        // moleImg.delay(Math.floor(this.timeSpentUp)).removeMole();
     }
 }
 
@@ -72,9 +73,11 @@ Mole.prototype.emerge = function() {
  * Then after one second it should remove the mole from the DOM.
  */
 Mole.prototype.whackThisMole = function() {
+    console.log("this");
     var mole = this.moleElement;
     var _this = this;
     mole.on('click', function() {
+        console.log(_this);
         if (_this.isWhacked === 'false') {
             scoreBoard.attr('data-score', Number(scoreBoard.attr('data-score')) + 1);
             scoreBoard.html(Number(scoreBoard.html()) + 1);
@@ -82,8 +85,8 @@ Mole.prototype.whackThisMole = function() {
         _this.isWhacked = 'true';
         console.log(_this.isWhacked)
         
-        mole.addClass('in-love');
-        _this.removeMole();
+        _this.moleElement.addClass('in-love');
+        setTimeout(_this.removeMole.bind(_this), 1000);
     })
 }
 
@@ -95,12 +98,12 @@ Mole.prototype.whackThisMole = function() {
 Mole.prototype.removeMole = function() {
     var mole = this.moleElement;
     var _this = this;
-    mole.on('click', function() {
-        mole.removeClass('in-love');
-        mole.fadeOut();
-        var currentHole = $(_this.currentHole)
-        currentHole.attr('data-hole-occupied', 'false');
-    })
+    mole.removeClass('in-love');
+    // mole.fadeOut();
+    var currentHole = $(_this.currentHole)
+    currentHole.attr('data-hole-occupied', 'false');
+    console.log(mole);
+    currentHole.empty();
 }
 /**
  * Select an element from the DOM. The element must be one of the 

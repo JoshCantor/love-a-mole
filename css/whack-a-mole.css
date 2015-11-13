@@ -33,11 +33,12 @@ html {
 /* Use the following selectors style moles and mole-holes 
    HINT: the mole.png file is 62px by 62px */
 #mole-field td {
-  
+  width: 62px;
+  height: 62px;
 }
 
 .mole-hole {
-
+  
 }
 
 /* Make sure every mole appears as the mole.png file in this folder 

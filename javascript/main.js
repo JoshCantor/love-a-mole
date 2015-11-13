@@ -121,9 +121,6 @@ function startGame() {
     gameStartButton.hide();
     initiateRound(0);
 }
-// Everything working as expected up to this point
-
-/////////////////////////
 
 
 /**
@@ -161,8 +158,7 @@ function initiateRound(roundNumber) {
  * When we're sure the last moles are done, let the user try again
  */
 function endGame() {
-    //what is MOLE_ANIMATE_TIME?
-    var maxTimeUp = GLOBALS.MOLE_ANIMATE_TIME + GLOBALS.MOLE_UP_MAX;
+    var maxTimeUp = GLOBALS.MOLE_UP_MAX;
 
     // Wait a little while after final round, then put the 
     // gameStartButton back on the screen.
